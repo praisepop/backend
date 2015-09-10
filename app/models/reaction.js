@@ -2,12 +2,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var reactionSchema = new Schema({
-  post: { type: ObjectId, ref: 'Post' },
+  post: { type: Schema.Types.ObjectId, ref: 'Post' },
   type: { type: String, required: true, uppercase: true, enum: [
       'EMOJI', 'TEXT'
   ]},
+  notified: { type: Boolean, default: true },
   reaction: { type: String, required: true },
-  reactor: { type: ObjectId, ref: 'User' },
+  reactor: { type: Schema.Types.ObjectId, ref: 'User' },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });

@@ -4,19 +4,19 @@ var Schema = mongoose.Schema;
 var postSchema = new Schema({
   addressed_to: {
     name: { type: String, required: false},
-    id: { type: ObjectId, required: false, ref: 'User' }
+    id: { type: Schema.Types.ObjectId, required: false, ref: 'User' }
   },
   body: { type: String, required: true },
   type: { type: String, required: true, uppercase: true, enum: [
     'SHOUTOUT', 'INVITE', 'ANNOUNCEMENT'
   ]},
-  posted_by: { type: ObjectId, required: true },
+  posted_by: { type: Schema.Types.ObjectId, required: true },
   hidden: { type: Boolean, default: false},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   hastags: [{ type: String, unique: true }],
   reports: [{
-    reported_by: { type: ObjectId, ref: 'User', required: true },
+    reported_by: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     created_at: { type: Date, default Date.now }
   }]
 });

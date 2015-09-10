@@ -2,16 +2,16 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
+  token: { type: String, required: false },
   salt: { type: String, required: true },
-  token: { type: String required: false }
   password: { type: String, required: true },
   email: { type: String, lowercase: true, trim: true, required: true, unique: true, dropDups: true },
   name: {
     first: { type: String, required: true },
     last: { type: String, required: true }
   },
-  organization: { type : ObjectId, ref: 'Organization' }
-  verfied: { type: Boolean, default: false, required: true },
+  orgs: [{ type : Schema.Types.ObjectId, ref: 'Organization' }],
+  verified: { type: Boolean, default: false, required: true },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });
