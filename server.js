@@ -1,13 +1,18 @@
 var express = require('express'),
     parser = require('body-parser'),
     mongoose = require('mongoose'),
-    util = require('util');
+    util = require('util')
+    jwt = require('jsonwebtoken');;
+
+var config = require('./config');
 
 var app = express();
 
-mongoose.connect('mongodb://localhost/praisepop');
+mongoose.connect(config.database);
 
 app.set('port', 8080);
+app.set('jwt-secret', config.secret);
+
 app.use(parser.urlencoded({extended: true}));
 app.use(parser.json());
 

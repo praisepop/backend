@@ -6,6 +6,7 @@
     "body-parser": "~1.0.1",
     "email-addresses": "^2.0.1",
     "express": "~4.0.0",
+    "jsonwebtoken": "^5.0.5",
     "mongoose": "~3.6.13",
     "q": "^1.0.1",
     "util": "x"

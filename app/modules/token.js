@@ -12,10 +12,11 @@ module.exports = {
 
     token.create(newToken, function(err, user) {
       if (err) {
-        callback(err)
+        callback(err);
       }
       else {
         console.log('Token was successfully generated for '+userId+'.');
+        callback();
       }
     });
   },

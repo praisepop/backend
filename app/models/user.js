@@ -6,6 +6,7 @@ var userSchema = new Schema({
   salt: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, lowercase: true, trim: true, required: true, unique: true, dropDups: true },
+  admin: { type: Boolean, default: false, required: true },
   name: {
     first: { type: String, required: true },
     last: { type: String, required: true }
