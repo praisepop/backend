@@ -2,9 +2,7 @@ var mongoose = require('mongoose')
     util = require('util')
     config = require('../../config');
 
-var user = require('./user'),
-    confirm = require('./confirm');
-    authenticate = require('./authenticate');
+var user = require('./user');
 
 module.exports = function(router) {
   router.use(function(req, res, next) {
@@ -12,10 +10,12 @@ module.exports = function(router) {
       next();
   });
 
-  router.use('/authenticate', authenticate);
+  // Paths you can use WITHOUT a token!
 
-  router.post('/users/', user);
-  router.use('/users/confirm/:id/:token', confirm);
+  router.use('/users/authenticate', user.authenticate);
+
+  router.post('/users/', user.create);
+  router.get('/users/confirm/:id/:token', user.confirm);
 
   router.use(function(req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -40,7 +40,15 @@ module.exports = function(router) {
     }
   });
 
-  router.use('/users/:id?', user);
+  // Token required for these.
+  router.put('/users/update', user.update);
+
+  router.use('*', function(req, res) {
+      res.status(404).json({
+        result: false,
+        message: 'Nothing to see here... yet.'
+      });
+  });
 
   return router;
 }

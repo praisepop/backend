@@ -50,17 +50,24 @@ module.exports = {
     });
   },
   update: function(req, res) {
-    var query = { '_id': req.params.id };
-    var update = req.body;
+    var query = { _id: req.decoded._id };
+    var update = { password : req.password };
+
+    // ADD LOGIC HERE FOR CHANGING PASSWORD, AKA IF PASSWORD IS SAME, ERROR, ETC.
 
     user.update(query, update, function(err, user) {
-      if (err) {
-        res.send(err);
-      }
-      else {
+      if (err) throw err;
+
+      if (user) {
         res.status(200).json({
           result: true,
           message: 'The user was successfully updated.'
+        });
+      }
+      else {
+        res.status(205).json({
+          result: false,
+          message: 'User not found, or was unable to be updated'
         });
       }
     });
@@ -101,9 +108,7 @@ module.exports = {
       email: request.email,
       password: request.password
     }, function(err, user) {
-      if (err) {
-        res.status()
-      }
+      if (err) throw err;
 
       if (!user) {
         res.status(404).json({
@@ -133,7 +138,7 @@ module.exports = {
         });
       }
       else {
-        res.send('User with _id ' + query._id + ' resultfully removed from users collection');
+        res.send('User with id ' + query._id + ' resultfully removed from users collection');
       }
     });
   }
