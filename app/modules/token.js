@@ -20,13 +20,15 @@ module.exports = {
       }
     });
   },
-  invalidate: function(callback) {
-    token.update({token: req.params.token}, {
+  invalidate: function(req, res) {
+    var query = { _id:req.params.token, user:req.params.id, valid: true };
+
+    token.update(query, {
       valid: false
-    }, function(err, affected, resp) {
+    }, function(err, user) {
       if (err) {
-        callback(err);
+        res.send(err);
       }
-    })
+    });
   }
 };
