@@ -2,10 +2,13 @@ var mongoose = require('mongoose')
     jwt = require('jsonwebtoken');
 
 var user = require('../models/user');
+var org = require('../models/organization');
 var token = require('./token');
 var email_parser = require('../tools/email-parser');
 
 var config = require('../../config');
+
+var Org = require('../modules/organization');
 
 module.exports = {
   create: function(req, res) {
@@ -18,10 +21,10 @@ module.exports = {
       name: request.name
     };
 
-    user.findOne({email : request.email}, function(err, user) {
+    user.findOne({email : request.email}, function(err, result) {
       if (err) throw err;
 
-      if (!user) {
+      if (!result) {
         user.create(newUser, function(err, user) {
           if (err) {
             res.status(507).json({
@@ -62,8 +65,34 @@ module.exports = {
       }
     });
   },
-  register: function(req, res) {
+  confirm: function(req, res) {
+    user.findOne({_id : req.params.id, verified: false}, function(err, result) {
+      if (err) throw err;
 
+      if (!result) {
+        res.status(205).json({
+          result: false,
+          message: 'User not found or has been previously verified.'
+        });
+      }
+      else {
+        user.findByIdAndUpdate(req.params.id, {
+          verified: true
+        }, function(err, user) {
+          if (err) throw err;
+
+          var meta = email_parser.parse(user.email);
+          Org.process(meta, user);
+
+          if (!err) {
+            res.status(200).json({
+              result: true,
+              messsage: 'The user was successfully verified, and organizations were created!'
+            });
+          }
+        });
+      }
+    })
   },
   authenticate: function(req, res) {
     var request = req.body;
