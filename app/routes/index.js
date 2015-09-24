@@ -3,6 +3,7 @@ var mongoose = require('mongoose')
     config = require('../../config');
 
 var user = require('./user'),
+    confirm = require('./confirm');
     authenticate = require('./authenticate');
 
 module.exports = function(router) {
@@ -13,13 +14,19 @@ module.exports = function(router) {
 
   router.use('/authenticate', authenticate);
 
+  router.post('/users/', user);
+  router.use('/users/confirm/:id/:token', confirm);
+
   router.use(function(req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (token) {
       jwt.verify(token, config.secret, function(err, decoded) {
         if (err) {
-          return res.json({ success: false, message: 'Failed to authenticate token.' });
+          return res.status(403).json({
+            success: false,
+            message: 'Failed to authenticate token.'
+          });
         } else {
           req.decoded = decoded;
           next();

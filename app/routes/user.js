@@ -20,14 +20,14 @@ module.exports = function(req, res) {
     }
     else {
       if (req.method == 'POST') {
-        if (!req.decoded) {
+        // if (!req.decoded) {
           User.create(req, res);
-        }
+        // }
 
-        res.status(200).json({
-          result: false,
-          message: 'Nothing to be found here.'
-        });
+        // res.status(404).json({
+        //   result: false,
+        //   message: 'Nothing to be found here.'
+        // });
       }
     }
   }
