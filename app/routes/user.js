@@ -1,4 +1,5 @@
 var User = require('../modules/user');
+var Token = require('../modules/token');
 
 module.exports = {
   create: function(req, res) {
