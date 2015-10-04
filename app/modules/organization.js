@@ -17,7 +17,7 @@ module.exports = {
           parent: true
         }
 
-        organization.create(newOrg, function(newOrg, orgResult) {
+        organization.create(newOrg, function(err, orgResult) {
           if (err) throw err;
 
           if (orgResult) {
