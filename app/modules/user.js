@@ -35,7 +35,10 @@ module.exports = {
           else {
             token.create(user.id, function(err) {
               if (!err) {
-                res.json({result: true});
+                res.json({
+                  result: true,
+                  message: 'The user was successfully created.'
+                });
               }
             })
           }
@@ -92,7 +95,7 @@ module.exports = {
           Org.process(meta, user);
 
           if (!err) {
-            res.status(200).json({
+            res.status(201).json({
               result: true,
               messsage: 'The user was successfully verified, and organizations were created!'
             });
