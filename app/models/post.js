@@ -23,7 +23,7 @@ var postSchema = new Schema({
 
 postSchema.pre('save', function(next) {
   this.updated_at = new Date();
-  done();
+  next();
 });
 
 module.exports = mongoose.model('Post', postSchema);

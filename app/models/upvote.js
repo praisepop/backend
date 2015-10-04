@@ -11,7 +11,7 @@ var upvoteSchema = new Schema({
 
 upvoteSchema.pre('save', function(next) {
   this.updated_at = new Date();
-  done();
+  next();
 });
 
 module.exports = mongoose.model('Upvote', upvoteSchema);
