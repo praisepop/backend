@@ -29,7 +29,7 @@ module.exports = {
               }
               else {
                 res.status(500).json({
-                  success: false,
+                  result: false,
                   message: 'There was an internal error.'
                 });
               }
@@ -55,7 +55,7 @@ module.exports = {
                     }
                     else {
                       res.status(500).json({
-                        success: false,
+                        result: false,
                         message: 'There was an internal error.'
                       });
                     }
@@ -93,7 +93,7 @@ module.exports = {
                   }
                   else {
                     res.status(500).json({
-                      success: false,
+                      result: false,
                       message: 'There was an internal error.'
                     });
                   }
@@ -101,7 +101,7 @@ module.exports = {
               }
 
               res.status(500).json({
-                success: false,
+                result: false,
                 message: 'There was an internal error.'
               });
             });
