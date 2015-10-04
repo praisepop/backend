@@ -27,6 +27,12 @@ module.exports = {
               if (result) {
                 return true;
               }
+              else {
+                res.status(500).json({
+                  success: false,
+                  message: 'There was an internal error.'
+                });
+              }
             });
 
             if (!parent) {
@@ -46,6 +52,12 @@ module.exports = {
 
                     if (result) {
                       return true;
+                    }
+                    else {
+                      res.status(500).json({
+                        success: false,
+                        message: 'There was an internal error.'
+                      });
                     }
                   });
                 }
@@ -79,10 +91,19 @@ module.exports = {
                   if (result) {
                     return true;
                   }
+                  else {
+                    res.status(500).json({
+                      success: false,
+                      message: 'There was an internal error.'
+                    });
+                  }
                 });
               }
 
-              return false;
+              res.status(500).json({
+                success: false,
+                message: 'There was an internal error.'
+              });
             });
           }
         });
