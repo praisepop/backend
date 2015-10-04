@@ -1,4 +1,5 @@
-var mongoose = require('mongoose')
+var mongoose = require('mongoose'),
+    mongoosePaginate = require('mongoose-paginate'),
     jwt = require('jsonwebtoken');
 
 var post = require('../models/post');
@@ -32,7 +33,7 @@ module.exports = {
       from: mongoose.Types.ObjectId(req.decoded._id),
       to: request.to,
       body: request.body,
-      org: mongoose.Types.ObjectId(request.org),
+      org: mongoose.Types.ObjectId(req.params.org_id),
       type: request.type,
       hashtags: request.hashtags
     };
@@ -54,6 +55,12 @@ module.exports = {
     });
   },
   list: function(req, res) {
+    post.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, result) {
+      if (err) throw err;
 
+      if (result) {
+        res.status(201).json(result);
+      }
+    });
   }
 };
