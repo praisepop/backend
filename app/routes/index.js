@@ -2,7 +2,8 @@ var mongoose = require('mongoose')
     util = require('util')
     config = require('../../config');
 
-var user = require('./user');
+var user = require('./user'),
+    posts = require('./posts');
 
 module.exports = function(router) {
   router.use(function(req, res, next) {
@@ -14,7 +15,7 @@ module.exports = function(router) {
 
   router.use('/users/authenticate', user.authenticate);
 
-  router.post('/users/', user.create);
+  router.post('/users/new', user.create);
   router.get('/users/confirm/:id/:token', user.confirm);
 
   router.use(function(req, res, next) {
@@ -42,6 +43,7 @@ module.exports = function(router) {
 
   // Token required for these.
   router.put('/users/update', user.update);
+  router.post('/posts/new', posts.create);
 
   router.use('*', function(req, res) {
       res.status(404).json({
