@@ -1,73 +1,89 @@
-var org = require('../models/organization.js');
+var organization = require('../models/organization.js');
+var user = require('../models/user.js');
 
 module.exports = {
-  create: function(organization, domain) {
-    org.create(organization, function(err, result) {
-      if (err) throw err;
-
-      if (result) {
-        if (domain) {
-          org.findOneAndUpdate({domain : domain}, {$push: {sub_orgs: result.id}}, function(err, result) {
-            if (err) throw err;
-
-            if (result) {
-                return true;
-            }
-          });
-        }
-        return true;
-      }
-
-      return false;
-    });
-  },
-  process: function(meta, user) {
+  process: function(meta, person) {
     var parent = meta.parent;
     var domain = meta.parent_domain;
     var subdomain = meta.subdomain;
 
-    org.findOne({ domain : domain }, function(err, result) {
+    organization.findOne({ domain : domain }, function(err, resultOrg) {
       if (err) throw err;
 
-      if (!result) {
+      if (!resultOrg) {
         var newOrg = {
           domain: domain,
           created_by: user.id,
-          parent_org: true
+          parent: true
         }
 
-        var result = module.exports.create(newOrg, null);
+        organization.create(newOrg, function(newOrg, orgResult) {
+          if (err) throw err;
 
-        if (!parent) {
-          org.findOne({ domain : domain }, function(err, result) {
-            if (err) throw err;
-            if (!result) {
+          if (orgResult) {
+            user.findOneAndUpdate({email : person.email}, {$push: {orgs: orgResult.id}}, function(err, result) {
+              if (err) throw err;
+
+              if (result) {
+                return true;
+              }
+            });
+
+            if (!parent) {
               var subOrg = {
                 domain: subdomain,
                 created_by: user.id,
-                parent_org: false
+                parent: false,
+                parent_org: orgResult.id
               };
 
-              module.exports.create(subOrg, domain);
+              organization.create(subOrg, function(err, result) {
+                if (err) throw err;
+
+                if (result) {
+                  user.findOneAndUpdate({email : person.email}, {$push: {orgs: result.id}}, function(err, result) {
+                    if (err) throw err;
+
+                    if (result) {
+                      return true;
+                    }
+                  });
+                }
+              });
             }
-          });
-        }
-        else {
-          if (result) return true;
-        }
+            else {
+              if (orgResult) return true;
+            }
+          }
+        });
       }
       else {
-        org.findOne({ domain : domain }, function(err, result) {
+        organization.findOne({ domain : subdomain }, function(err, result) {
           if (err) throw err;
+
           if (!result) {
             var subOrg = {
               domain: subdomain,
               created_by: user.id,
-              parent_org: false
+              parent: false,
+              parent_org: resultorganization.id
             };
 
-            var result = module.exports.create(subOrg, domain);
-            if (result) return true;
+            organization.create(subOrg, function(err, result) {
+              if (err) throw err;
+
+              if (result) {
+                user.findOneAndUpdate({email : person.email}, {$push: {orgs: result.id}}, function(err, result) {
+                  if (err) throw err;
+
+                  if (result) {
+                    return true;
+                  }
+                });
+              }
+
+              return false;
+            });
           }
         });
       }
