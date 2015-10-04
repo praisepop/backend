@@ -6,6 +6,7 @@ var postSchema = new Schema({
     name: { type: String, required: false},
     id: { type: Schema.Types.ObjectId, required: false, ref: 'User' }
   },
+  org: { type: Schema.Types.ObjectId, required: true },
   body: { type: String, required: true },
   type: { type: String, required: true, uppercase: true, enum: [
     'SHOUTOUT', 'INVITE', 'ANNOUNCEMENT'

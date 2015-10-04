@@ -32,6 +32,7 @@ module.exports = {
       from: mongoose.Types.ObjectId(req.decoded._id),
       to: request.to,
       body: request.body,
+      org: mongoose.Types.ObjectId(request.org),
       type: request.type,
       hashtags: request.hashtags
     };
