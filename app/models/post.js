@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
-  addressed_to: {
+  to: {
     name: { type: String, required: false},
     id: { type: Schema.Types.ObjectId, required: false, ref: 'User' }
   },
@@ -10,7 +10,7 @@ var postSchema = new Schema({
   type: { type: String, required: true, uppercase: true, enum: [
     'SHOUTOUT', 'INVITE', 'ANNOUNCEMENT'
   ]},
-  posted_by: { type: Schema.Types.ObjectId, required: true },
+  from: { type: Schema.Types.ObjectId, required: true },
   hidden: { type: Boolean, default: false},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
