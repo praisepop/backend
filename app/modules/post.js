@@ -2,7 +2,8 @@ var mongoose = require('mongoose'),
     mongoosePaginate = require('mongoose-paginate'),
     jwt = require('jsonwebtoken');
 
-var post = require('../models/post');
+var post = require('../models/post'),
+    org = require('../models/organization');
 
 var config = require('../../config');
 
@@ -33,7 +34,7 @@ module.exports = {
       from: mongoose.Types.ObjectId(req.decoded._id),
       to: request.to,
       body: request.body,
-      org: mongoose.Types.ObjectId(req.params.org_id),
+      org: mongoose.Types.ObjectId(req.params.id),
       type: request.type,
       hashtags: request.hashtags
     };
@@ -55,11 +56,60 @@ module.exports = {
     });
   },
   list: function(req, res) {
-    post.paginate({}, { page: req.query.page, limit: req.query.limit }, function(err, result) {
-      if (err) throw err;
+    org.findById(req.params.id, function(err, result) {
+      if (err) {
+        res.status(507).json({
+          result: false,
+          message: err.message
+        });
+      }
 
       if (result) {
-        res.status(201).json(result);
+        post.paginate({ org: req.params.id }, { page: req.query.page, limit: req.query.limit }, function(err, results, pageCount, itemCount) {
+          if (err) {
+            res.status(507).json({
+              result: false,
+              message: err.message
+            });
+          }
+
+          if (results) {
+            var page = parseInt(req.query.page);
+
+            if (page > 1) {
+              var remainder = itemCount % pageCount;
+              var previousPage = page - 1;
+              var nextPage = page + 1;
+
+              var pagingDictionary = { // TODO: REPLACE THIS IN PRODUCTION!
+                  previous: 'http://localhost:8080/api/v1/organization/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
+                  next: 'http://localhost:8080/api/v1/organization/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
+              }
+
+              if ((remainder == 0 || remainder < parseInt(req.query.limit)) && page == pageCount) {
+                  delete pagingDictionary.next;
+              }
+            }
+
+            res.status(201).json({
+              result: true,
+              data: results,
+              paging: pagingDictionary
+            });
+          }
+          else {
+            res.status(404).json({
+              result: false,
+              message: 'No posts were found for this organization.'
+            });
+          }
+        });
+      }
+      else {
+        res.status(404).json({
+          result: false,
+          message: 'Unable to find organization.'
+        });
       }
     });
   }

@@ -43,7 +43,7 @@ module.exports = function(router) {
 
   // Token required for these.
   router.put('/users/update', user.update);
-  router.post('/organization/:org_id/posts/new', posts.create);
+  router.post('/organization/:id/posts/new', posts.create);
   router.post('/organization/:id/posts', posts.list);
 
   router.use('*', function(req, res) {
