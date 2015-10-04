@@ -8,7 +8,12 @@ module.exports = {
     var subdomain = meta.subdomain;
 
     organization.findOne({ domain : domain }, function(err, resultOrg) {
-      if (err) throw err;
+      if (err) {
+        res.status(507).json({
+          result: false,
+          message: err.message
+        });
+      }
 
       if (!resultOrg) {
         var newOrg = {
@@ -18,11 +23,21 @@ module.exports = {
         }
 
         organization.create(newOrg, function(err, orgResult) {
-          if (err) throw err;
+          if (err) {
+            res.status(507).json({
+              result: false,
+              message: err.message
+            });
+          }
 
           if (orgResult) {
             user.findOneAndUpdate({email : person.email}, {$push: {orgs: orgResult.id}}, function(err, result) {
-              if (err) throw err;
+              if (err) {
+                res.status(507).json({
+                  result: false,
+                  message: err.message
+                });
+              }
 
               if (result) {
                 return true;
@@ -44,11 +59,21 @@ module.exports = {
               };
 
               organization.create(subOrg, function(err, result) {
-                if (err) throw err;
+                if (err) {
+                  res.status(507).json({
+                    result: false,
+                    message: err.message
+                  });
+                }
 
                 if (result) {
                   user.findOneAndUpdate({email : person.email}, {$push: {orgs: result.id}}, function(err, result) {
-                    if (err) throw err;
+                    if (err) {
+                      res.status(507).json({
+                        result: false,
+                        message: err.message
+                      });
+                    }
 
                     if (result) {
                       return true;
@@ -71,7 +96,12 @@ module.exports = {
       }
       else {
         organization.findOne({ domain : subdomain }, function(err, result) {
-          if (err) throw err;
+          if (err) {
+            res.status(507).json({
+              result: false,
+              message: err.message
+            });
+          }
 
           if (!result) {
             var subOrg = {
@@ -82,11 +112,21 @@ module.exports = {
             };
 
             organization.create(subOrg, function(err, result) {
-              if (err) throw err;
+              if (err) {
+                res.status(507).json({
+                  result: false,
+                  message: err.message
+                });
+              }
 
               if (result) {
                 user.findOneAndUpdate({email : person.email}, {$push: {orgs: result.id}}, function(err, result) {
-                  if (err) throw err;
+                  if (err) {
+                    res.status(507).json({
+                      result: false,
+                      message: err.message
+                    });
+                  }
 
                   if (result) {
                     return true;
