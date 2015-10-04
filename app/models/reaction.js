@@ -13,10 +13,9 @@ var reactionSchema = new Schema({
   updated_at: { type: Date, default: Date.now }
 });
 
-reactionSchema.pre('save', function(next){
-  now = new Date();
-  this.updated_at = now;
-  next();
+reactionSchema.pre('save', function(next) {
+  this.updated_at = new Date();
+  done();
 });
 
 module.exports = mongoose.model('Reaction', reactionSchema);

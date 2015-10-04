@@ -9,10 +9,9 @@ var tokenSchema = new Schema({
   valid: { type: Boolean, default: true }
 });
 
-tokenSchema.pre('save', function(next){
-  now = new Date();
-  this.updated_at = now;
-  next();
+tokenSchema.pre('save', function(next) {
+  this.updated_at = new Date();
+  done();
 });
 
 module.exports = mongoose.model('Token', tokenSchema);
