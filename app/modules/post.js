@@ -112,5 +112,46 @@ module.exports = {
         });
       }
     });
+  },
+  delete: function(req, res) {
+    var request = req.body;
+
+    post.findById(req.params.post, function(err, result) {
+      if (err) throw err;
+
+      if (result) {
+        if (result.hidden) {
+          res.status(500).json({
+            result: false,
+            message: 'Post was already deleted!'
+          });
+        }
+
+        if (result.from == req.decoded._id || result.to.id == req.decoded._id) {
+          result.hidden = true;
+
+          result.save(function(err) {
+            if (err) {
+              res.status(500).json({
+                result: false,
+                message: 'Post could not be deleted'
+              });
+            }
+            else {
+              res.status(201).json({
+                result: true,
+                message: 'Post was deleted.'
+              });
+            }
+          });
+        }
+      }
+      else {
+        res.status(404).json({
+          result: false,
+          message: 'Unable to delete post.'
+        })
+      }
+    });
   }
 };
