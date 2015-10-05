@@ -25,7 +25,7 @@ module.exports = function(router) {
       jwt.verify(token, config.secret, function(err, decoded) {
         if (err) {
           return res.status(403).json({
-            success: false,
+            result: false,
             message: 'Failed to authenticate token.'
           });
         } else {
@@ -35,7 +35,7 @@ module.exports = function(router) {
       });
     } else {
       return res.status(403).json({
-          success: false,
+          result: false,
           message: 'No token provided.'
       });
     }
@@ -47,7 +47,7 @@ module.exports = function(router) {
 
   router.post('/organization/:id/posts/new', posts.create);
   router.post('/organization/:id/posts', posts.list);
-  
+
   router.post('/posts/:post/upvote', posts.upvote);
   router.post('/posts/:post/delete', posts.delete);
   router.post('/posts/:post/flag', posts.flag); // TODO!
