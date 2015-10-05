@@ -54,7 +54,10 @@ module.exports = {
   },
   update: function(req, res) {
     var query = { _id: req.decoded._id };
-    var update = { password : req.password };
+    var update = {
+      password : req.password,
+      name : req.name
+    };
 
     // ADD LOGIC HERE FOR CHANGING PASSWORD, AKA IF PASSWORD IS SAME, ERROR, ETC.
 
