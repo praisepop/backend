@@ -30,10 +30,14 @@ module.exports = {
 
             res.status(201).json({
               result: true,
-              message: 'Upvoted created successfully'
+              message: 'Upvoted created successfully.'
             });
           }
           else {
+            res.status(507).json({
+              result: false,
+              message: 'Unable to upvote post!'
+            })
           }
         });
       }
