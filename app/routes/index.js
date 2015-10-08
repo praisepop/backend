@@ -45,8 +45,8 @@ module.exports = function(router) {
   router.put('/users/update', user.update);
   // router.get('/users/random', user.random); // TODO!
 
-  router.post('/organization/:id/posts/new', posts.create);
-  router.post('/organization/:id/posts', posts.list);
+  router.post('/orgs/:id/posts/new', posts.create);
+  router.post('/orgs/:id/posts', posts.list);
 
   router.post('/posts/:post/upvote', posts.upvote);
   router.post('/posts/:post/delete', posts.delete);
