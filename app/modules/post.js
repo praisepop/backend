@@ -1,9 +1,11 @@
 var mongoose = require('mongoose'),
     mongoosePaginate = require('mongoose-paginate'),
-    jwt = require('jsonwebtoken');
+    jwt = require('jsonwebtoken'),
+    async = require('async');
 
 var post = require('../models/post'),
-    org = require('../models/organization');
+    org = require('../models/organization'),
+    upvote = require('../models/upvote');;
 
 var config = require('../../config');
 
@@ -74,26 +76,56 @@ module.exports = {
           }
 
           if (results) {
+            var newResults = [];
             var page = parseInt(req.query.page);
 
-            if (page > 1) {
+            async.each(results, function(eachResult, callback) {
+              upvote.findOne({ post: eachResult.id, upvoted_by: req.decoded._id }, function(err, result) {
+                if (err) {
+                  res.status(507).json({
+                    result: false,
+                    message: err.message
+                  });
+                }
+
+                if (result) {
+                  eachResult['upvoted'] = true;
+                }
+                else {
+                  eachResult['upvoted'] = false;
+                }
+
+                newResults.push(eachResult);
+                callback()
+              });
+            }, function(err) {
+              if (!err) {
+
+              }
+            });
+
+            if (page >= 1) {
               var remainder = itemCount % pageCount;
               var previousPage = page - 1;
               var nextPage = page + 1;
 
               var pagingDictionary = { // TODO: REPLACE THIS IN PRODUCTION!
-                  previous: 'http://localhost:8080/api/v1/organization/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
-                  next: 'http://localhost:8080/api/v1/organization/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
+                  previous: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
+                  next: 'orgs/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
               }
 
               if ((remainder == 0 || remainder < parseInt(req.query.limit)) && page == pageCount) {
                   delete pagingDictionary.next;
               }
+
+              if (page == 1) {
+                delete pagingDictionary.previous;
+              }
             }
 
             res.status(201).json({
               result: true,
-              data: results,
+              data: newResults,
               paging: pagingDictionary
             });
           }
