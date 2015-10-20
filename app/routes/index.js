@@ -26,6 +26,7 @@ module.exports = function(router) {
         if (err) {
           return res.status(403).json({
             result: false,
+            authenticated: false,
             message: 'Failed to authenticate token.'
           });
         } else {

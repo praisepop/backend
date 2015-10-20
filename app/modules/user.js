@@ -123,7 +123,7 @@ module.exports = {
         });
       } else if (user) {
         var token = jwt.sign(user, config.secret, {
-          expiresInMinutes: 43200 // expires in 24 hours
+          expiresInMinutes: 43200 // expires in 30 days
         });
 
         res.json({
