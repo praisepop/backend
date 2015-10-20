@@ -67,7 +67,21 @@ module.exports = {
       }
 
       if (result) {
-        post.paginate({ org: req.params.id }, { page: req.query.page, limit: req.query.limit }, function(err, results, pageCount, itemCount) {
+        var options = {
+          lean: true,
+          page: req.query.page,
+          limit: req.query.limit,
+          populate: [{
+            path: 'org',
+            select: '_id name domain parent'
+            },
+            {
+              path: 'to.id',
+              select: '_id name'
+            }]
+        };
+
+        post.paginate({ org: req.params.id }, options, function(err, results, pageCount, itemCount) {
           if (err) {
             res.status(507).json({
               result: false,
@@ -76,11 +90,11 @@ module.exports = {
           }
 
           if (results) {
-            var newResults = [];
             var page = parseInt(req.query.page);
+            var newResults = [];
 
-            async.each(results, function(eachResult, callback) {
-              upvote.findOne({ post: eachResult.id, upvoted_by: req.decoded._id }, function(err, result) {
+            async.each(results, function(eachPost, callback) {
+              upvote.findOne({ post: eachPost._id, upvoted_by: req.decoded._id }, function(err, result) {
                 if (err) {
                   res.status(507).json({
                     result: false,
@@ -89,44 +103,40 @@ module.exports = {
                 }
 
                 if (result) {
-                  eachResult['upvoted'] = true;
+                  eachPost.upvoted = true;
                 }
                 else {
-                  eachResult['upvoted'] = false;
+                  eachPost.upvoted = false;
                 }
 
-                newResults.push(eachResult);
-                callback()
+                newResults.push(eachPost);
+                callback();
               });
-            }, function(err) {
-              if (!err) {
+            }, function() {
+              if (page >= 1) {
+                var remainder = itemCount % pageCount;
+                var previousPage = page - 1;
+                var nextPage = page + 1;
 
+                var pagingDictionary = {
+                    previous: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
+                    next: 'orgs/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
+                }
+
+                if ((remainder == 0 || remainder < parseInt(req.query.limit)) && page == pageCount) {
+                    delete pagingDictionary.next;
+                }
+
+                if (page == 1) {
+                  delete pagingDictionary.previous;
+                }
               }
-            });
 
-            if (page >= 1) {
-              var remainder = itemCount % pageCount;
-              var previousPage = page - 1;
-              var nextPage = page + 1;
-
-              var pagingDictionary = { // TODO: REPLACE THIS IN PRODUCTION!
-                  previous: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
-                  next: 'orgs/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
-              }
-
-              if ((remainder == 0 || remainder < parseInt(req.query.limit)) && page == pageCount) {
-                  delete pagingDictionary.next;
-              }
-
-              if (page == 1) {
-                delete pagingDictionary.previous;
-              }
-            }
-
-            res.status(201).json({
-              result: true,
-              data: newResults,
-              paging: pagingDictionary
+              res.status(201).json({
+                result: true,
+                data: newResults,
+                paging: pagingDictionary
+              });
             });
           }
           else {
@@ -159,7 +169,7 @@ module.exports = {
           });
         }
 
-        if (result.from == req.decoded._id || result.to.id == req.decoded._id) {
+        if (result.from == req.decoded._id || result.to.id == req.decoded._id || req.decoded.admin) {
           result.hidden = true;
 
           result.save(function(err) {
