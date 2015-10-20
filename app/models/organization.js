@@ -5,7 +5,7 @@ var organizationSchema = new Schema({
   name: { type: String, required: false },
   domain: { type: String, required: true },
   parent: { type: Boolean, required: true, default: true },
-  parent_org: { type: Schema.Types.ObjectId, required: false},
+  parent_org: { type: Schema.Types.ObjectId, required: false, ref: 'Organization'},
   created_by: { type: Schema.Types.ObjectId, ref: 'User' },
 	created_at: { type: Date, default: Date.now },
 	updated_at: { type: Date, default: Date.now }
