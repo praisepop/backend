@@ -20,15 +20,12 @@ module.exports = {
       });
     }
 
-    // This doesn't work... whyyyy
-
-    // if (request.type != 'invite' || request.type != 'announcement' || request.type != 'shoutout') {
-    //   res.status(422).json({
-    //     result: false,
-    //     message: 'Unknown post type.'
-    //   });
-    //   return; // I don't know why this is a fix... res.status(422).json should end output, but it doesn't... ?
-    // }
+    if (!(request.type.toLowerCase() === 'invite' || request.type.toLowerCase() === 'announcement' || request.type.toLowerCase() === 'shoutout')) {
+        res.status(422).json({
+          result: false,
+          message: 'Unknown post type.'
+        });
+    }
 
     request.to.id = mongoose.Types.ObjectId(request.to.id);
 
