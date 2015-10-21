@@ -47,7 +47,7 @@ module.exports = {
       }
 
       if (result) {
-        res.status(200).json({
+        res.status(201).json({
           result: true,
           message: 'Post successfully created.'
         });
@@ -129,7 +129,7 @@ module.exports = {
                 }
               }
 
-              res.status(201).json({
+              res.status(200).json({
                 result: true,
                 data: newResults,
                 paging: pagingDictionary
@@ -177,7 +177,7 @@ module.exports = {
               });
             }
             else {
-              res.status(201).json({
+              res.status(200).json({
                 result: true,
                 message: 'Post was deleted.'
               });
