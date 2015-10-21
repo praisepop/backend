@@ -6,13 +6,6 @@ module.exports = {
   create: function(req, res) {
     var request = req.body;
 
-    if (!request.upvoted_by) {
-      res.status(422).json({
-        result: false,
-        message: 'Insufficient parameters for creating an upvote.'
-      });
-    }
-
     var newUpvote = {
       post: mongoose.Types.ObjectId(req.params.post),
       upvoted_by: mongoose.Types.ObjectId(req.decoded._id)
