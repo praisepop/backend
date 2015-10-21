@@ -51,6 +51,31 @@ module.exports = {
       }
     });
   },
+  list: function(req, res) {
+    var query = {
+      post: mongoose.Types.ObjectId(req.params.post),
+      reactor: mongoose.Types.ObjectId(req.decoded._id)
+    }
+
+    reaction.find(query, function(err, result) {
+      if (err) {
+        res.status(507).json({
+          result: false,
+          message: err.message
+        });
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      }
+      else {
+        res.status(404).json({
+          result: false,
+          message: 'Post reactions not found.'
+        });
+      }
+    });
+  },
   delete: function(req, res) {
     var request = req.body;
 
@@ -66,8 +91,6 @@ module.exports = {
       reactor: mongoose.Types.ObjectId(req.decoded._id),
       reaction: request.reaction
     }
-
-    console.log(query);
 
     reaction.remove(query, function(err, result) {
       if (err) {

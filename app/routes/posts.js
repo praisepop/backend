@@ -18,6 +18,9 @@ module.exports = {
   react: function(req, res) {
     Reaction.create(req, res);
   },
+  reactions: function(req, res) {
+    Reaction.list(req, res);
+  },
   deleteReaction: function(req, res) {
     Reaction.delete(req, res);
   },
