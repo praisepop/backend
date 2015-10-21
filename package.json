@@ -1,6 +1,13 @@
 {
   "name": "praisepop",
+  "description": "A REST API for PraisePop.",
+  "private": true,
   "main": "server.js",
+  "license": "MIT",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/praisepop/backend.git"
+  },
   "dependencies": {
     "async": "^1.4.2",
     "bcrypt": "x",
@@ -10,7 +17,7 @@
     "jsonwebtoken": "^5.0.5",
     "mongoose": "~3.6.13",
     "mongoose-paginate": "ruddfawcett/mongoose-paginate",
-    "q": "^1.0.1",
+    "mongoose-simple-random": "^0.3.3",
     "util": "x"
   }
 }
