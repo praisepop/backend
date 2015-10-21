@@ -43,14 +43,16 @@ module.exports = function(router) {
   });
 
   // Token required for these.
+
   router.put('/users/update', user.update);
   // router.get('/users/random', user.random); // TODO!
 
   router.post('/orgs/:id/posts/new', posts.create);
   router.post('/orgs/:id/posts', posts.list);
-
   router.post('/posts/:post/upvote', posts.upvote);
-  router.post('/posts/:post/delete', posts.delete);
+  router.delete('/posts/:post/delete', posts.delete);
+  router.post('/posts/:post/reaction', posts.react);
+  router.delete('/posts/:post/reaction', posts.deleteReaction);
   router.post('/posts/:post/flag', posts.flag); // TODO!
 
   router.use('*', function(req, res) {

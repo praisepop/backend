@@ -1,5 +1,6 @@
 var Post = require('../modules/post');
 var Upvote = require('../modules/upvote');
+var Reaction = require('../modules/reaction');
 
 module.exports = {
   create: function(req, res) {
@@ -13,6 +14,12 @@ module.exports = {
   },
   delete: function(req, res) {
     Post.delete(req, res);
+  },
+  react: function(req, res) {
+    Reaction.create(req, res);
+  },
+  deleteReaction: function(req, res) {
+    Reaction.delete(req, res);
   },
   flag: function(req, res) {
 
