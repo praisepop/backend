@@ -95,58 +95,63 @@ module.exports = {
         });
       }
       else {
-        organization.findOne({ domain : subdomain }, function(err, result) {
-          if (err) {
-            res.status(507).json({
-              result: false,
-              message: err.message
-            });
-          }
-
-          if (!result) {
-            var subOrg = {
-              domain: subdomain,
-              created_by: user.id,
-              parent: false,
-              parent_org: resultorganization.id
-            };
-
-            organization.create(subOrg, function(err, result) {
-              if (err) {
-                res.status(507).json({
-                  result: false,
-                  message: err.message
-                });
-              }
-
-              if (result) {
-                user.findOneAndUpdate({email : person.email}, {$push: {orgs: result.id}}, function(err, result) {
-                  if (err) {
-                    res.status(507).json({
-                      result: false,
-                      message: err.message
-                    });
-                  }
-
-                  if (result) {
-                    return true;
-                  }
-                  else {
-                    res.status(500).json({
-                      result: false,
-                      message: 'There was an internal error.'
-                    });
-                  }
-                });
-              }
-
-              res.status(500).json({
+        if (subdomain) {
+          organization.findOne({ domain : subdomain }, function(err, result) {
+            if (err) {
+              res.status(507).json({
                 result: false,
-                message: 'There was an internal error.'
+                message: err.message
               });
-            });
-          }
-        });
+            }
+
+            if (!result) {
+              var subOrg = {
+                domain: subdomain,
+                created_by: user.id,
+                parent: false,
+                parent_org: result.id
+              };
+
+              organization.create(subOrg, function(err, result) {
+                if (err) {
+                  res.status(507).json({
+                    result: false,
+                    message: err.message
+                  });
+                }
+
+                if (result) {
+                  user.findOneAndUpdate({email : person.email}, {$push: {orgs: result.id}}, function(err, result) {
+                    if (err) {
+                      res.status(507).json({
+                        result: false,
+                        message: err.message
+                      });
+                    }
+
+                    if (result) {
+                      return true;
+                    }
+                    else {
+                      res.status(500).json({
+                        result: false,
+                        message: 'There was an internal error.'
+                      });
+                    }
+                  });
+                }
+
+                res.status(500).json({
+                  result: false,
+                  message: 'There was an internal error.'
+                });
+              });
+            }
+          });
+        }
+        else {
+          
+        }
       }
     });
   }

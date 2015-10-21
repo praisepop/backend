@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
     jwt = require('jsonwebtoken');
 
-var user = require('../models/user');
+var User = require('../models/user');
 var org = require('../models/organization');
 var token = require('./token');
 var email_parser = require('../tools/email-parser');
@@ -21,11 +21,11 @@ module.exports = {
       name: request.name
     };
 
-    user.findOne({email : request.email}, function(err, result) {
+    User.findOne({email : request.email}, function(err, result) {
       if (err) throw err;
 
       if (!result) {
-        user.create(newUser, function(err, user) {
+        User.create(newUser, function(err, user) {
           if (err) {
             res.status(507).json({
               result: false,
@@ -52,6 +52,48 @@ module.exports = {
       }
     });
   },
+  random: function(req, res) {
+    var query = {
+      verified: true,
+      org: mongoose.Types.ObjectId(req.params.id)
+    }
+
+    User.find(query, function(err, result) {
+      if (err) {
+        res.status(507).json({
+          result: false,
+          message: err.message
+        });
+      }
+
+      if (result.length >= 10) {
+        User.findRandom(query, {}, { limit: 6 }, function(err, result) {
+          if (err) {
+            res.status(507).json({
+              result: false,
+              message: err.message
+            });
+          }
+
+          if (result) {
+            res.status(200).json(result);
+          }
+          else {
+            res.status(404).json({
+              result: false,
+              message: 'No users found.'
+            });
+          }
+        });
+      }
+      else {
+        res.status(404).json({
+          result: false,
+          message: 'Less than ten users, so can\'t find any random ones.'
+        })
+      }
+    });
+  },
   update: function(req, res) {
     var query = { _id: req.decoded._id };
     var update = {
@@ -61,7 +103,7 @@ module.exports = {
 
     // ADD LOGIC HERE FOR CHANGING PASSWORD, AKA IF PASSWORD IS SAME, ERROR, ETC.
 
-    user.update(query, update, function(err, user) {
+    User.update(query, update, function(err, user) {
       if (err) throw err;
 
       if (user) {
@@ -79,7 +121,7 @@ module.exports = {
     });
   },
   confirm: function(req, res) {
-    user.findOne({_id : req.params.id, verified: false}, function(err, result) {
+    User.findOne({_id : req.params.id, verified: false}, function(err, result) {
       if (err) throw err;
 
       if (!result) {
@@ -89,20 +131,79 @@ module.exports = {
         });
       }
       else {
-        user.findByIdAndUpdate(req.params.id, {
+        User.findByIdAndUpdate(req.params.id, {
           verified: true
         }, function(err, user) {
-          if (err) throw err;
-
           var meta = email_parser.parse(user.email);
-          Org.process(meta, user);
 
-          if (!err) {
-            res.status(201).json({
-              result: true,
-              messsage: 'The user was successfully verified, and organizations were created!'
-            });
-          }
+          org.findOne({ domain: meta.parent_domain}, function(err, orgResult) {
+            if (orgResult) {
+              if (!meta.subdomain) {
+                User.findOneAndUpdate({email : user.email}, {$push: {orgs: orgResult.id}}, function(err, result) {
+                  if (err) {
+                    res.status(507).json({
+                      result: false,
+                      message: err.message
+                    });
+                  }
+
+                  if (result) {
+                    res.status(201).json({
+                      result: true,
+                      messsage: 'The user was successfully verified, and organizations were created!'
+                    });
+                  }
+                  else {
+                    res.status(404).json({
+                      result: false,
+                      message: 'User not found.'
+                    });
+                  }
+                });
+              }
+              else {
+                org.findOne({ domain: meta.subdomain}, function(err, subOrg) {
+                  if (subOrg) {
+                    User.findOneAndUpdate({email : user.email}, {$pushAll: {orgs: [orgResult.id, subOrg.id]}}, function(err, result) {
+                      if (err) {
+                        res.status(507).json({
+                          result: false,
+                          message: err.message
+                        });
+                      }
+
+                      if (result) {
+                        res.status(201).json({
+                          result: true,
+                          messsage: 'The user was successfully verified, and organizations were created!'
+                        });
+                      }
+                      else {
+                        res.status(404).json({
+                          result: false,
+                          message: 'User not found.'
+                        });
+                      }
+                    });
+                  }
+                  else {
+                    Org.process(meta, user);
+                    res.status(201).json({
+                      result: true,
+                      messsage: 'The user was successfully verified, and organizations were created!'
+                    });
+                  }
+                });
+              }
+            }
+            else {
+              Org.process(meta, user);
+              res.status(201).json({
+                result: true,
+                messsage: 'The user was successfully verified, and organizations were created!'
+              });
+            }
+          });
         });
       }
     })
@@ -110,7 +211,7 @@ module.exports = {
   authenticate: function(req, res) {
     var request = req.body;
 
-    user.findOne({
+    User.findOne({
       email: request.email,
       password: request.password
     }, function(err, user) {
@@ -136,7 +237,7 @@ module.exports = {
   remove: function(req, res) {
     var query = { '_id': req.params.id };
 
-    user.remove(query, function(err, user) {
+    User.remove(query, function(err, user) {
       if (err) {
         res.status(409).json({
           result: false,
