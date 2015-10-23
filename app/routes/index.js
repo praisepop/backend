@@ -45,16 +45,17 @@ module.exports = function(router) {
   // Token required for these.
 
   router.put('/users/update', user.update);
-  // router.get('/users/random', user.random); // TODO!
 
+  router.get('/orgs/:id/users/random', user.random);
   router.post('/orgs/:id/posts/new', posts.create);
   router.get('/orgs/:id/posts', posts.list);
-  router.post('/posts/:post/upvote', posts.upvote);
-  router.delete('/posts/:post/delete', posts.delete);
-  router.post('/posts/:post/reaction', posts.react);
-  router.get('/posts/:post/reactions', posts.reactions);
-  router.delete('/posts/:post/reaction', posts.deleteReaction);
-  router.post('/posts/:post/flag', posts.flag); // TODO!
+
+  router.post('/posts/:id/upvote', posts.upvote);
+  router.delete('/posts/:id/delete', posts.delete);
+  router.post('/posts/:id/reaction', posts.react);
+  router.get('/posts/:id/reactions', posts.reactions);
+  router.delete('/posts/:id/reaction', posts.deleteReaction);
+  // router.post('/posts/:post/flag', posts.flag); // TODO!
 
   router.use('*', function(req, res) {
       res.status(404).json({

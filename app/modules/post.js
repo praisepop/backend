@@ -155,7 +155,7 @@ module.exports = {
   delete: function(req, res) {
     var request = req.body;
 
-    post.findById(req.params.post, function(err, result) {
+    post.findById(req.params.id, function(err, result) {
       if (err) throw err;
 
       if (result) {

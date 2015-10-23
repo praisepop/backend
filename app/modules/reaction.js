@@ -20,7 +20,7 @@ module.exports = {
     }
 
     var newReaction = {
-      post: mongoose.Types.ObjectId(req.params.post),
+      post: mongoose.Types.ObjectId(req.params.id),
       type: request.type,
       reactor: mongoose.Types.ObjectId(req.decoded._id),
       reaction: request.reaction,
@@ -53,7 +53,7 @@ module.exports = {
   },
   list: function(req, res) {
     var query = {
-      post: mongoose.Types.ObjectId(req.params.post),
+      post: mongoose.Types.ObjectId(req.params.id),
       reactor: mongoose.Types.ObjectId(req.decoded._id)
     }
 
@@ -87,7 +87,7 @@ module.exports = {
     }
 
     var query = {
-      post: mongoose.Types.ObjectId(req.params.post),
+      post: mongoose.Types.ObjectId(req.params.id),
       reactor: mongoose.Types.ObjectId(req.decoded._id),
       reaction: request.reaction
     }

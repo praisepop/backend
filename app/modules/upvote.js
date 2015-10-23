@@ -7,7 +7,7 @@ module.exports = {
     var request = req.body;
 
     var newUpvote = {
-      post: mongoose.Types.ObjectId(req.params.post),
+      post: mongoose.Types.ObjectId(req.params.id),
       upvoted_by: mongoose.Types.ObjectId(req.decoded._id)
     }
 
