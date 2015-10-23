@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var random = require('mongoose-simple-random');
+
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
@@ -16,6 +18,8 @@ var userSchema = new Schema({
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });
+
+userSchema.plugin(random);
 
 userSchema.pre('save', function(next) {
   this.updated_at = new Date();

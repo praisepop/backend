@@ -8,6 +8,9 @@ module.exports = {
   update: function(req, res) {
     User.update(req, res);
   },
+  random: function(req, res) {
+    User.random(req, res);
+  },
   confirm: function(req, res) {
     if (req.params.id && req.params.token) {
         Token.invalidate(req, res);

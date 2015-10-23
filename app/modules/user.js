@@ -55,7 +55,7 @@ module.exports = {
   random: function(req, res) {
     var query = {
       verified: true,
-      org: mongoose.Types.ObjectId(req.params.id)
+      orgs: mongoose.Types.ObjectId(req.params.id)
     }
 
     User.find(query, function(err, result) {
@@ -213,7 +213,8 @@ module.exports = {
 
     User.findOne({
       email: request.email,
-      password: request.password
+      password: request.password,
+      verified: true
     }, function(err, user) {
       if (err) throw err;
 
