@@ -211,11 +211,13 @@ module.exports = {
   authenticate: function(req, res) {
     var request = req.body;
 
+    var selection = '_id email updated_at created_at orgs name verified admin';
+
     User.findOne({
       email: request.email,
       password: request.password,
       verified: true
-    }, function(err, user) {
+    }).select(selection).lean().populate('orgs').exec(function(err, user) {
       if (err) throw err;
 
       if (!user) {
@@ -228,9 +230,10 @@ module.exports = {
           expiresInMinutes: 43200 // expires in 30 days
         });
 
+        user.token = token;
+
         res.json({
-          result: true,
-          token: token
+          user
         });
       }
     });
