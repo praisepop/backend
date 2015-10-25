@@ -15,7 +15,6 @@ module.exports = {
     var request = req.body;
 
     var newUser = {
-      salt: request.salt,
       password: request.password,
       email: request.email,
       name: request.name
@@ -100,8 +99,6 @@ module.exports = {
       password : req.password,
       name : req.name
     };
-
-    // ADD LOGIC HERE FOR CHANGING PASSWORD, AKA IF PASSWORD IS SAME, ERROR, ETC.
 
     User.update(query, update, function(err, user) {
       if (err) throw err;
@@ -211,13 +208,10 @@ module.exports = {
   authenticate: function(req, res) {
     var request = req.body;
 
-    var selection = '_id email updated_at created_at orgs name verified admin';
-
     User.findOne({
       email: request.email,
-      password: request.password,
       verified: true
-    }).select(selection).lean().populate('orgs').exec(function(err, user) {
+    }).populate('orgs').exec(function(err, user) {
       if (err) throw err;
 
       if (!user) {
@@ -226,14 +220,30 @@ module.exports = {
           message: 'Authentication failed. User not found.'
         });
       } else if (user) {
-        var token = jwt.sign(user, config.secret, {
-          expiresInMinutes: 43200 // expires in 30 days
-        });
+        user.comparePassword(request.password, function(err, isMatch) {
+          if (err) throw err;
 
-        user.token = token;
+          if (isMatch) {
+            var token = jwt.sign(user, config.secret, {
+              expiresIn: 2592000 // expires in 30 days (30*24*60*60)
+            });
+              console.log('test');
 
-        res.json({
-          user
+            var userDict = user.toObject();
+            delete userDict.password;
+            delete userDict.__v;
+
+            res.status(200).json({
+              token: token,
+              user: userDict
+            });
+          }
+          else {
+            res.status(403).json({
+              result: false,
+              message: 'Your username or password was incorrect.'
+            });
+          }
         });
       }
     });
