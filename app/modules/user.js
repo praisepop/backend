@@ -227,7 +227,6 @@ module.exports = {
             var token = jwt.sign(user, config.secret, {
               expiresIn: 2592000 // expires in 30 days (30*24*60*60)
             });
-              console.log('test');
 
             var userDict = user.toObject();
             delete userDict.password;
