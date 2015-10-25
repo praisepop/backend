@@ -67,6 +67,9 @@ module.exports = {
         var options = {
           lean: true,
           page: req.query.page,
+          sort: {
+            created_at: -1
+          },
           limit: req.query.limit,
           populate: [{
             path: 'org',
@@ -128,6 +131,13 @@ module.exports = {
                   delete pagingDictionary.previous;
                 }
               }
+
+              newResults.sort(function(a, b){
+                  var keyA = new Date(a.created_at),
+                  keyB = new Date(b.created_at);
+
+                  return keyB - keyA;
+              });
 
               res.status(200).json({
                 result: true,
