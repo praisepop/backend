@@ -1,5 +1,6 @@
-var mongoose = require('mongoose')
-    jwt = require('jsonwebtoken');
+var mongoose = require('mongoose'),
+    jwt = require('jsonwebtoken'),
+    nodemailer = require('nodemailer');
 
 var User = require('../models/user');
 var org = require('../models/organization');
@@ -32,11 +33,36 @@ module.exports = {
             });
           }
           else {
-            token.create(user.id, function(err) {
+            token.create(user.id, function(err, createdToken) {
               if (!err) {
-                res.json({
-                  result: true,
-                  message: 'The user was successfully created.'
+                var transporter = nodemailer.createTransport({
+                    service: 'Gmail',
+                    auth: {
+                        user: config.email,
+                        pass: config.emailpass
+                    }
+                });
+
+                // TODO: Change in production.
+                var link = 'http://localhost:8080/api/v1/users/confirm/' + user.id + '/' + createdToken.id;
+
+                var mailOptions = {
+                    from: 'PraisePop! <no-reply@praisepop.us>', // sender address
+                    to: request.email, // list of receivers
+                    subject: 'Please confirm your PraisePop account!', // Subject line
+                    text: 'Hello!  Thanks for signing up for PraisePop!  Please click this link to confirm your account: ' + link + '!', // plaintext body
+                    html: 'Hello!  Thanks for signing up for PraisePop!  <a href=' + link +'>Please click this link to confirm your account</a>!' // html body
+                };
+
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (error){
+                        return console.log(error);
+                    }
+
+                    res.json({
+                      result: true,
+                      message: 'The user was successfully created.'
+                    });
                 });
               }
             })

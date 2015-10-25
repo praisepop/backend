@@ -10,13 +10,13 @@ module.exports = {
       token: generated
     }
 
-    token.create(newToken, function(err, user) {
+    token.create(newToken, function(err, createdToken) {
       if (err) {
         callback(err);
       }
       else {
         console.log('Token was successfully generated for '+userId+'.');
-        callback();
+        callback(null, createdToken);
       }
     });
   },
