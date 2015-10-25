@@ -148,10 +148,11 @@ module.exports = {
       if (err) throw err;
 
       if (!result) {
-        res.status(205).json({
-          result: false,
-          message: 'User not found or has been previously verified.'
-        });
+        res.send('<b>User not found or has been previously verified.</b>');
+        // res.status(205).json({
+        //   result: false,
+        //   message: 'User not found or has been previously verified.'
+        // });
       }
       else {
         User.findByIdAndUpdate(req.params.id, {
@@ -164,23 +165,26 @@ module.exports = {
               if (!meta.subdomain) {
                 User.findOneAndUpdate({email : user.email}, {$push: {orgs: orgResult.id}}, function(err, result) {
                   if (err) {
-                    res.status(507).json({
-                      result: false,
-                      message: err.message
-                    });
+                    res.send('<b>Sorry, we weren\'t able to verify your email!</b>');
+                    // res.status(507).json({
+                    //   result: false,
+                    //   message: err.message
+                    // });
                   }
 
                   if (result) {
-                    res.status(201).json({
-                      result: true,
-                      messsage: 'The user was successfully verified, and organizations were created!'
-                    });
+                    res.send('<b>Your email has been successfully verified!</b>');
+                    // res.status(201).json({
+                    //   result: true,
+                    //   messsage: 'The user was successfully verified, and organizations were created!'
+                    // });
                   }
                   else {
-                    res.status(404).json({
-                      result: false,
-                      message: 'User not found.'
-                    });
+                    res.send('<b>We were unable to verify your account... Are you sure you signed up?</b>');
+                    // res.status(404).json({
+                    //   result: false,
+                    //   message: 'User not found.'
+                    // });
                   }
                 });
               }
@@ -189,42 +193,47 @@ module.exports = {
                   if (subOrg) {
                     User.findOneAndUpdate({email : user.email}, {$pushAll: {orgs: [orgResult.id, subOrg.id]}}, function(err, result) {
                       if (err) {
-                        res.status(507).json({
-                          result: false,
-                          message: err.message
-                        });
+                        res.send('<b>Sorry, we weren\'t able to verify your email!</b>');
+                        // res.status(507).json({
+                        //   result: false,
+                        //   message: err.message
+                        // });
                       }
 
                       if (result) {
-                        res.status(201).json({
-                          result: true,
-                          messsage: 'The user was successfully verified, and organizations were created!'
-                        });
+                        res.send('<b>Your email has been successfully verified!</b>');
+                        // res.status(201).json({
+                        //   result: true,
+                        //   messsage: 'The user was successfully verified, and organizations were created!'
+                        // });
                       }
                       else {
-                        res.status(404).json({
-                          result: false,
-                          message: 'User not found.'
-                        });
+                        res.send('<b>We were unable to verify your account... Are you sure you signed up?</b>');
+                        // res.status(404).json({
+                        //   result: false,
+                        //   message: 'User not found.'
+                        // });
                       }
                     });
                   }
                   else {
                     Org.process(meta, user);
-                    res.status(201).json({
-                      result: true,
-                      messsage: 'The user was successfully verified, and organizations were created!'
-                    });
+                    res.send('<b>Your email has been successfully verified!</b>');
+                    // res.status(201).json({
+                    //   result: true,
+                    //   messsage: 'The user was successfully verified, and organizations were created!'
+                    // });
                   }
                 });
               }
             }
             else {
               Org.process(meta, user);
-              res.status(201).json({
-                result: true,
-                messsage: 'The user was successfully verified, and organizations were created!'
-              });
+              res.send('<b>Your email has been successfully verified!</b>');
+              // res.status(201).json({
+              //   result: true,
+              //   messsage: 'The user was successfully verified, and organizations were created!'
+              // });
             }
           });
         });
