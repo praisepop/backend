@@ -25,6 +25,6 @@ module.exports = {
     Reaction.delete(req, res);
   },
   flag: function(req, res) {
-
+    Post.flag(req, res);
   }
 }

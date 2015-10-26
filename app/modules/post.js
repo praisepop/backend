@@ -9,6 +9,10 @@ var post = require('../models/post'),
     user = require('../models/user');
 
 var config = require('../../config');
+var passwords = require('../../passwords');
+
+var Parse = require('parse/node').Parse;
+Parse.initialize(passwords.PARSE_APP_ID, passwords.PARSE_JAVASCRIPT_KEY);
 
 module.exports = {
   create: function(req, res) {
@@ -39,7 +43,6 @@ module.exports = {
 
       if (user) {
         request.to.id = user.id;
-        // TOOD: Trigger Parse notifications here...
       }
 
       request.to.name = request.to.name.first + ' ' + request.to.name.last;
@@ -62,6 +65,26 @@ module.exports = {
         }
 
         if (result) {
+          if (request.to.id) {
+            var query = {
+              channels: [user.id],
+              data: {
+                badge: 'Increment',
+                alert: 'Someone wrote a pop about you!',
+                post: result.id
+              }
+            };
+
+            Parse.Push.send(query,  {
+              success: function() {
+                console.log('Notification sent at',new Date()+'.');
+              },
+              error: function(error) {
+                console.log('Unable to send notification at',new Date()+'.');
+              }
+            });
+          }
+
           res.status(201).json({
             result: true,
             message: 'Post successfully created.'
@@ -216,6 +239,53 @@ module.exports = {
           result: false,
           message: 'Unable to delete post.'
         })
+      }
+    });
+  },
+  flag: function(req, res) {
+    var request = req.body;
+
+    post.findById(req.params.id, function(err, result) {
+      if (err) throw err;
+
+      if (result.hidden) {
+        result.reports.push({
+          reported_by: mongoose.Types.ObjectId(req.decoded._id)
+        });
+        res.status(200).json({
+          result: true,
+          message: 'Post already hidden.'
+        });
+      }
+      else {
+        var update = {
+          $push: {
+            reports: {
+              reported_by: mongoose.Types.ObjectId(req.decoded._id)
+            }
+          }
+        };
+
+        post.findByIdAndUpdate(req.params.id, update, function(err, result) {
+          if (err) throw err;
+          if (result) {
+            if (result.reports.length >= 3) {
+              result.hidden = true;
+              result.save();
+            }
+
+            res.status(200).json({
+              result: true,
+              message: 'Post has been flagged.'
+            });
+          }
+          else {
+            res.status(500).json({
+              result: false,
+              message: 'Post was unable to be flagged.'
+            });
+          }
+        });
       }
     });
   }

@@ -20,7 +20,8 @@ var postSchema = new Schema({
   hashtags: [{ type: String, unique: true }],
   reports: [{
     reported_by: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    created_at: { type: Date, default: Date.now }
+    created_at: { type: Date, default: Date.now },
+    _id: false
   }]
 });
 
