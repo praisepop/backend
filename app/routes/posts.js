@@ -26,5 +26,8 @@ module.exports = {
   },
   flag: function(req, res) {
     Post.flag(req, res);
+  },
+  single: function(req, res) {
+    Post.single(req, res);
   }
 }

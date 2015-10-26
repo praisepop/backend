@@ -288,5 +288,25 @@ module.exports = {
         });
       }
     });
+  },
+  single: function(req, res) {
+    post.findById(req.params.id, function(err, result) {
+      if (err) {
+        res.status(500).json({
+          result: false,
+          message: 'Post could not be deleted'
+        });
+      }
+
+      if (result) {
+        res.status(200).json(result);
+      }
+      else {
+        res.status(400).json({
+          result: false,
+          message: 'Post not found'
+        });
+      }
+    });
   }
 };
