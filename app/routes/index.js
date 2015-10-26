@@ -51,7 +51,7 @@ module.exports = function(router) {
   router.get('/orgs/:id/posts', posts.list);
 
   router.post('/posts/:id/upvote', posts.upvote);
-  router.delete('/posts/:id/delete', posts.delete);
+  router.delete('/posts/:id', posts.delete);
   router.post('/posts/:id/reaction', posts.react);
   router.get('/posts/:id/reactions', posts.reactions);
   router.delete('/posts/:id/reaction', posts.deleteReaction);
