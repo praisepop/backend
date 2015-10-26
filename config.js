@@ -1,6 +1,5 @@
 module.exports = {
     secret: 'UHJhaXNlUG9wISBXaGF0cyBQb3Bpbj8=',
     database : 'mongodb://localhost/praisepop',
-    email: 'trypraisepop@gmail.com',
-    emailpass: 'woco.technovation'
+    email: 'trypraisepop@gmail.com'
 };
