@@ -21,7 +21,7 @@ module.exports = {
       });
     }
 
-    if (!(request.type.toLowerCase() === 'invite' || request.type.toLowerCase() === 'announcement' || request.type.toLowerCase() === 'shoutout')) {
+    if (!(request.type.toLowerCase() === 'uncategorized' || request.type.toLowerCase() === 'invite' || request.type.toLowerCase() === 'announcement' || request.type.toLowerCase() === 'shoutout')) {
         res.status(422).json({
           result: false,
           message: 'Unknown post type.'
@@ -29,7 +29,7 @@ module.exports = {
     }
 
     // request.to.id = mongoose.Types.ObjectId(request.to.id);
-    user.findOne({ fullname: request.name}, function(err, user) {
+    user.findOne({ 'name.first': request.to.name.first, 'name.last': request.to.name.last}, function(err, user) {
       if (err) {
         res.status(507).json({
           result: false,
@@ -39,32 +39,35 @@ module.exports = {
 
       if (user) {
         request.to.id = user.id;
-      }
-    });
-
-    var newPost = {
-      from: mongoose.Types.ObjectId(req.decoded._id),
-      to: request.to,
-      body: request.body,
-      org: mongoose.Types.ObjectId(req.params.id),
-      type: request.type,
-      hashtags: request.hashtags
-    };
-
-    post.create(newPost, function(err, result) {
-      if (err) {
-        res.status(507).json({
-          result: false,
-          message: err.message
-        });
+        // TOOD: Trigger Parse notifications here...
       }
 
-      if (result) {
-        res.status(201).json({
-          result: true,
-          message: 'Post successfully created.'
-        });
-      }
+      request.to.name = request.to.name.first + ' ' + request.to.name.last;
+
+      var newPost = {
+        from: mongoose.Types.ObjectId(req.decoded._id),
+        to: request.to,
+        body: request.body,
+        org: mongoose.Types.ObjectId(req.params.id),
+        type: request.type,
+        hashtags: request.hashtags
+      };
+
+      post.create(newPost, function(err, result) {
+        if (err) {
+          res.status(507).json({
+            result: false,
+            message: err.message
+          });
+        }
+
+        if (result) {
+          res.status(201).json({
+            result: true,
+            message: 'Post successfully created.'
+          });
+        }
+      });
     });
   },
   list: function(req, res) {
