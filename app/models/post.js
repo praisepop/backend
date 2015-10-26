@@ -11,7 +11,7 @@ var postSchema = new Schema({
   org: { type: Schema.Types.ObjectId, required: true, ref: 'Organization' },
   body: { type: String, required: true },
   type: { type: String, required: true, uppercase: true, enum: [
-    'SHOUTOUT', 'INVITE', 'ANNOUNCEMENT'
+    'SHOUTOUT', 'INVITE', 'ANNOUNCEMENT', 'UNCATEGORIZED'
   ]},
   from: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   hidden: { type: Boolean, default: false},
