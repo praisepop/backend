@@ -2,6 +2,9 @@ var mongoose = require('mongoose');
 
 var upvote = require('../models/upvote');
 
+var Parse = require('parse/node').Parse;
+Parse.initialize(passwords.PARSE_APP_ID, passwords.PARSE_JAVASCRIPT_KEY);
+
 module.exports = {
   create: function(req, res) {
     var request = req.body;
