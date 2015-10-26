@@ -5,7 +5,8 @@ var mongoose = require('mongoose'),
 
 var post = require('../models/post'),
     org = require('../models/organization'),
-    upvote = require('../models/upvote');;
+    upvote = require('../models/upvote'),
+    user = require('../models/user');
 
 var config = require('../../config');
 
@@ -13,7 +14,7 @@ module.exports = {
   create: function(req, res) {
     var request = req.body;
 
-    if (!request.from || !request.to || !request.body || !request.type) {
+    if (!request.to || !request.body || !request.type) {
       res.status(422).json({
         result: false,
         message: 'Insufficient parameters for creating a post.'
@@ -27,7 +28,19 @@ module.exports = {
         });
     }
 
-    request.to.id = mongoose.Types.ObjectId(request.to.id);
+    // request.to.id = mongoose.Types.ObjectId(request.to.id);
+    user.findOne({ fullname: request.name}, function(err, user) {
+      if (err) {
+        res.status(507).json({
+          result: false,
+          message: err.message
+        });
+      }
+
+      if (user) {
+        request.to.id = user.id;
+      }
+    });
 
     var newPost = {
       from: mongoose.Types.ObjectId(req.decoded._id),

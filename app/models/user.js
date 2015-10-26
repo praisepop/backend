@@ -23,6 +23,10 @@ var userSchema = new Schema({
 
 userSchema.plugin(random);
 
+userSchema.virtual('fullname').get(function() {
+    return this.name.first + ' ' + this.name.last;
+});
+
 userSchema.pre('save', function(next) {
   this.updated_at = new Date();
   next();
