@@ -8,6 +8,8 @@ var token = require('./token');
 var email_parser = require('../tools/email-parser');
 
 var config = require('../../config');
+var passwords = require('../../passwords');
+
 require('../tools/util');
 
 var Org = require('../modules/organization');
@@ -62,7 +64,7 @@ module.exports = {
                     service: 'Gmail',
                     auth: {
                         user: config.email,
-                        pass: config.emailpass
+                        pass: passwords.GMAIL_PASSWORD
                     }
                 });
 
