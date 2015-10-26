@@ -27,7 +27,7 @@ module.exports = {
       doamain = domain['parent_domain'];
 
       blacklist.contains(domain, function(found) {
-        if (!found) {
+        if (found) {
           res.status(503).json({
             result: false,
             message: 'You are trying to use a blacklisted domain name.'
