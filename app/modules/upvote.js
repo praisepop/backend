@@ -19,7 +19,23 @@ module.exports = {
           if (err) throw err;
 
           if (result) {
-            // TODO: SEND USER PUSH NOTIFICATION
+            var query = {
+              channels: [result.upvoted_by],
+              data: {
+                badge: 'Increment',
+                alert: 'Someone wrote a pop about you!',
+                post: result.post
+              }
+            };
+
+            Parse.Push.send(query,  {
+              success: function() {
+                console.log('Notification sent at',new Date()+'.');
+              },
+              error: function(error) {
+                console.log('Unable to send notification at',new Date()+'.');
+              }
+            });
 
             res.status(201).json({
               result: true,
