@@ -19,6 +19,7 @@
     "mongoose-paginate": "ruddfawcett/mongoose-paginate",
     "mongoose-simple-random": "^0.3.3",
     "nodemailer": "^1.8.0",
+    "parse": "^1.6.7",
     "util": "x"
   }
 }
