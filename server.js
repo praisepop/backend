@@ -8,7 +8,7 @@ var config = require('./config');
 
 var app = express();
 
-mongoose.connect(config.database);
+mongoose.connect(process.env['MONGOLAB_URI']);
 
 var port = process.env.PORT || 8080;
 app.set('port', port);
