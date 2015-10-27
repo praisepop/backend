@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 
 var upvote = require('../models/upvote');
 
-var passwords = require('../../passwords');
 var Parse = require('parse/node').Parse;
 Parse.initialize(process.env['PARSE_APP_ID'], process.env['PARSE_JAVASCRIPT_KEY']);
 
