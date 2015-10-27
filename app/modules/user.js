@@ -17,27 +17,27 @@ module.exports = {
   create: function(req, res) {
     var request = req.body;
 
-    var fs = require('fs');
-    var blacklist;
-
-    fs.readFile(__dirname + '/../../email-blacklist.json', 'utf8', function (err, data) {
-      if (err) throw err;
-      blacklist = JSON.parse(data);
-
-      var domain = email_parser.parse(request.email);
-      doamain = domain['parent_domain'];
-
-      blacklist.contains(domain, function(found) {
-        if (found) {
-          res.status(503).json({
-            result: false,
-            message: 'You are trying to use a blacklisted domain name.'
-          });
-
-          return;
-        }
-      });
-    });
+    // var fs = require('fs');
+    // var blacklist;
+    //
+    // fs.readFile(__dirname + '/../../email-blacklist.json', 'utf8', function (err, data) {
+    //   if (err) throw err;
+    //   blacklist = JSON.parse(data);
+    //
+    //   var domain = email_parser.parse(request.email);
+    //   doamain = domain['parent_domain'];
+    //
+    //   blacklist.contains(domain, function(found) {
+    //     if (found) {
+    //       res.status(503).json({
+    //         result: false,
+    //         message: 'You are trying to use a blacklisted domain name.'
+    //       });
+    //
+    //       return;
+    //     }
+    //   });
+    // });
 
     var newUser = {
       password: request.password,
