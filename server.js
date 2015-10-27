@@ -10,9 +10,9 @@ var app = express();
 
 mongoose.connect(process.env.MONGOLAB_URI, function (err, res) {
   if (err) {
-    console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+    console.log ('ERROR connecting to: ' + process.env.MONGOLAB_URI + '. ' + err);
   } else {
-    console.log ('Succeeded connected to: ' + uristring);
+    console.log ('Succeeded connected to: ' + process.env.MONGOLAB_URI);
   }
 });
 
