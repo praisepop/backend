@@ -23,7 +23,7 @@
     "util": "x"
   },
   "engines": {
-    "node": "3.2.0",
+    "node": "4.x",
     "npm": "2.1.x"
   }
 }
