@@ -9,13 +9,13 @@
     "url": "https://github.com/praisepop/backend.git"
   },
   "dependencies": {
-    "async": "^1.4.2",
+    "async": "^1.5.0",
     "bcrypt": "x",
-    "body-parser": "~1.0.1",
+    "body-parser": "^1.14.1",
     "email-addresses": "^2.0.1",
-    "express": "~4.0.0",
-    "jsonwebtoken": "^5.0.5",
-    "mongoose": "~3.6.13",
+    "express": "*",
+    "jsonwebtoken": "^5.4.1",
+    "mongoose": "^4.2.3",
     "mongoose-paginate": "ruddfawcett/mongoose-paginate",
     "mongoose-simple-random": "^0.3.3",
     "nodemailer": "^1.8.0",
