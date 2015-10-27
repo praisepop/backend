@@ -10,7 +10,8 @@ var app = express();
 
 mongoose.connect(config.database);
 
-app.set('port', 8080);
+var port = process.env.PORT || 8080;
+app.set('port', port);
 app.set('jwt-secret', config.secret);
 
 app.use(parser.urlencoded({extended: true}));

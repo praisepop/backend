@@ -4,7 +4,7 @@ var upvote = require('../models/upvote');
 
 var passwords = require('../../passwords');
 var Parse = require('parse/node').Parse;
-Parse.initialize(passwords.PARSE_APP_ID, passwords.PARSE_JAVASCRIPT_KEY);
+Parse.initialize(process.env['PARSE_APP_ID'], process.env['PARSE_JAVASCRIPT_KEY']);
 
 module.exports = {
   create: function(req, res) {
