@@ -157,7 +157,9 @@ module.exports = {
                 var nextPage = page + 1;
 
                 var pagingDictionary = {
-                    previous: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
+                    first: 'orgs/'+req.params.id+'/posts?page=1&limit='+req.query.limit,
+                    last: 'orgs/'+req.params.id+'/posts?page='+pageCount+'&limit='+req.query.limit,
+                    prev: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
                     next: 'orgs/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
                 }
 
