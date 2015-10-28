@@ -8,23 +8,23 @@ var config = require('./config');
 
 var app = express();
 
-mongoose.connect(process.env.MONGOLAB_URI, function (err, res) {
+mongoose.connect(process.env.MONGO_DB_URL, function (err, res) {
   if (err) {
-    console.log ('ERROR connecting to: ' + process.env.MONGOLAB_URI + '. ' + err);
+    console.log ('ERROR: PraisePop was able to connect to: ' + process.env.MONGO_DB_URL + '. ' + err);
   } else {
-    console.log ('Succeeded connected to: ' + process.env.MONGOLAB_URI);
+    console.log ('SUCCESS: PraisePop was able to connect to: ' + process.env.MONGO_DB_URL);
   }
 });
 
 // CONNECTION EVENTS
 // When successfully connected
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + process.env.MONGOLAB_URI);
+  console.log('Mongoose default connection open to ' + process.env.MONGO_DB_URL);
 });
 
 // If the connection throws an error
 mongoose.connection.on('error',function (err) {
-  console.log('DATABASE URL',process.env.MONGOLAB_URI);
+  console.log('DATABASE URL',process.env.MONGO_DB_URL);
   console.log('Mongoose default connection error: ' + err);
 });
 
