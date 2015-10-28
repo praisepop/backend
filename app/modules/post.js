@@ -244,44 +244,56 @@ module.exports = {
   flag: function(req, res) {
     var request = req.body;
 
-    post.findById(req.params.id, function(err, result) {
+    post.find({ _id : req.params.id, 'reports.reported_by' : req.decoded._id }, function(err, result) {
       if (err) throw err;
 
-      if (result.hidden) {
-        result.reports.push({
-          reported_by: mongoose.Types.ObjectId(req.decoded._id)
-        });
-        res.status(200).json({
-          result: true,
-          message: 'Post already hidden.'
+      if (result.length > 0) {
+        res.status(503).json({
+          result: false,
+          message: 'You have already flagged this post!'
         });
       }
       else {
-        var update = {
-          $push: {
-            reports: {
-              reported_by: mongoose.Types.ObjectId(req.decoded._id)
-            }
-          }
-        };
-
-        post.findByIdAndUpdate(req.params.id, update, function(err, result) {
+        post.findById(req.params.id, function(err, result) {
           if (err) throw err;
-          if (result) {
-            if (result.reports.length >= 3) {
-              result.hidden = true;
-              result.save();
-            }
 
+          if (result.hidden) {
+            result.reports.push({
+              reported_by: mongoose.Types.ObjectId(req.decoded._id)
+            });
             res.status(200).json({
               result: true,
-              message: 'Post has been flagged.'
+              message: 'Post already hidden.'
             });
           }
           else {
-            res.status(500).json({
-              result: false,
-              message: 'Post was unable to be flagged.'
+            var update = {
+              $push: {
+                reports: {
+                  reported_by: mongoose.Types.ObjectId(req.decoded._id)
+                }
+              }
+            };
+
+            post.findByIdAndUpdate(req.params.id, update, function(err, result) {
+              if (err) throw err;
+              if (result) {
+                if (result.reports.length >= 3) {
+                  result.hidden = true;
+                  result.save();
+                }
+
+                res.status(200).json({
+                  result: true,
+                  message: 'Post has been flagged.'
+                });
+              }
+              else {
+                res.status(500).json({
+                  result: false,
+                  message: 'Post was unable to be flagged.'
+                });
+              }
             });
           }
         });
