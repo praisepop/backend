@@ -119,7 +119,7 @@ module.exports = {
             }]
         };
 
-        post.paginate({ org: req.params.id }, options, function(err, results, pageCount, itemCount) {
+        post.paginate({ org: req.params.id, hidden: false }, options, function(err, results, pageCount, itemCount) {
           if (err) {
             res.status(507).json({
               result: false,
