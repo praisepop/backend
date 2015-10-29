@@ -67,8 +67,8 @@ module.exports = {
                     }
                 });
 
-                // TODO: Change in production.
-                var link = 'http://localhost:8080/api/v1/users/confirm/' + user.id + '/' + createdToken.id;
+                // Make this localhost if testing locally.
+                var link = 'https://praisepop.herokuapp.com/api/v1/users/confirm/' + user.id + '/' + createdToken.id;
 
                 var mailOptions = {
                     from: 'PraisePop! <no-reply@praisepop.us>', // sender address
