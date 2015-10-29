@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_DB_URL, function (err, res) {
 // CONNECTION EVENTS
 // When successfully connected
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + process.env.MONGO_DB_URL);
+  console.log('Mongoose default connection open to database.');
 });
 
 // If the connection throws an error
