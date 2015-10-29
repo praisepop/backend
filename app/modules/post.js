@@ -157,10 +157,13 @@ module.exports = {
                 var nextPage = page + 1;
 
                 var pagingDictionary = {
-                    first: 'orgs/'+req.params.id+'/posts?page=1&limit='+req.query.limit,
-                    last: 'orgs/'+req.params.id+'/posts?page='+pageCount+'&limit='+req.query.limit,
-                    prev: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
-                    next: 'orgs/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
+                  total_items: itemCount,
+                  page_count: pageCount,
+                  current_page: parseInt(req.query.page),
+                  first: 'orgs/'+req.params.id+'/posts?page=1&limit='+req.query.limit,
+                  last: 'orgs/'+req.params.id+'/posts?page='+pageCount+'&limit='+req.query.limit,
+                  prev: 'orgs/'+req.params.id+'/posts?page='+previousPage+'&limit='+req.query.limit,
+                  next: 'orgs/'+req.params.id+'/posts?page='+nextPage+'&limit='+req.query.limit
                 }
 
                 if ((remainder == 0 || remainder < parseInt(req.query.limit)) && page == pageCount) {
