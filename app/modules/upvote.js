@@ -23,7 +23,7 @@ module.exports = {
 
           if (result) {
             var query = {
-              channels: [result.upvoted_by],
+              channels: ['PPC'+result.upvoted_by],
               data: {
                 badge: 'Increment',
                 alert: 'Someone wrote a pop about you!',

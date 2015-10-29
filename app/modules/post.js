@@ -66,7 +66,7 @@ module.exports = {
         if (result) {
           if (request.to.id) {
             var query = {
-              channels: [user.id],
+              channels: ['PPC'+user.id],
               data: {
                 badge: 'Increment',
                 alert: 'Someone wrote a pop about you!',
@@ -76,10 +76,10 @@ module.exports = {
 
             Parse.Push.send(query,  {
               success: function() {
-                console.log('Notification sent at',new Date()+'.');
+                console.log('Notification sent at', new Date()+'.');
               },
               error: function(error) {
-                console.log('Unable to send notification at',new Date()+'.');
+                console.log('Unable to send notification at', new Date()+'.');
               }
             });
           }
