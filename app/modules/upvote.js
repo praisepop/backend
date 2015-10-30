@@ -30,11 +30,11 @@ module.exports = {
               if (upvoteResult) {
                 if (postResult.to.id != req.decoded._id) {
                   var query = {
-                    channels: ['PPC'+result.upvoted_by],
+                    channels: ['PPC'+upvoteResult.upvoted_by],
                     data: {
                       badge: 'Increment',
                       alert: 'Someone popped a pop about you!',
-                      post: result.post
+                      post: upvoteResult.post
                     }
                   };
 
