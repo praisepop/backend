@@ -64,7 +64,6 @@ module.exports = {
         }
 
         if (result) {
-          console.log(request.to.id, req.decoded._id);
           if (request.to.id && request.to.id != req.decoded._id) {
             var query = {
               channels: ['PPC'+user.id],
