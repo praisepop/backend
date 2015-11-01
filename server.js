@@ -62,7 +62,7 @@ app.all('*', function(req, res, next) {
 var router = express.Router();
 router = require('./app/routes/')(router); // configure our routes
 
-app.use('/api/v1', router);
+app.use('/v1', router);
 
 app.use('*', function request(req, res) {
   res.json({error: 'Nothing to see here, move along!'});
