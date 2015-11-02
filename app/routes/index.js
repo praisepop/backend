@@ -55,7 +55,7 @@ module.exports = function(router) {
   router.post('/posts/:id/reaction', posts.react);
   router.get('/posts/:id/reactions', posts.reactions);
   router.delete('/posts/:id/reaction', posts.deleteReaction);
-  router.post('/posts/:id/flag', posts.flag); // TODO!
+  router.post('/posts/:id/flag', posts.flag);
   router.get('/posts/:id', posts.single);
 
   router.use('*', function(req, res) {
