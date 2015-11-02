@@ -10,7 +10,7 @@ var app = express();
 
 mongoose.connect(process.env.MONGO_DB_URL, function (err, res) {
   if (err) {
-    console.log ('ERROR: PraisePop was able to connect to database.');
+    console.log ('ERROR: PraisePop was unable to connect to database.');
   } else {
     console.log ('SUCCESS: PraisePop was able to connect to database.');
   }

@@ -59,6 +59,7 @@ module.exports = {
           else {
             token.create(user.id, function(err, createdToken) {
               if (!err) {
+                // var transporter = nodemailer.createTransport();
                 var transporter = nodemailer.createTransport({
                     service: 'Gmail',
                     auth: {
@@ -68,14 +69,14 @@ module.exports = {
                 });
 
                 // Make this localhost if testing locally.
-                var link = 'https://praisepop.herokuapp.com/api/v1/users/confirm/' + user.id + '/' + createdToken.id;
+                var link = 'https://api.trypraisepop.com/v1/users/confirm/' + user.id + '/' + createdToken.id;
 
                 var mailOptions = {
-                    from: 'PraisePop! <no-reply@praisepop.us>', // sender address
+                    from: 'PraisePop <no-reply@trypraisepop.com>', // sender address
                     to: request.email, // list of receivers
                     subject: 'Please confirm your PraisePop account!', // Subject line
-                    text: 'Hello!  Thanks for signing up for PraisePop!  Please click this link to confirm your account: ' + link + '!', // plaintext body
-                    html: 'Hello!  Thanks for signing up for PraisePop!  <a href=' + link +'>Please click this link to confirm your account</a>!' // html body
+                    text: 'Hello!  Thanks for signing up for PraisePop!  Please click this link to confirm your account: ' + link + '.', // plaintext body
+                    html: 'Hello!  Thanks for signing up for PraisePop!  <a href=' + link +'>Please click this link to confirm your account</a>.' // html body
                 };
 
                 transporter.sendMail(mailOptions, function(error, info){
