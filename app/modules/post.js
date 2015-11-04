@@ -93,6 +93,17 @@ module.exports = {
     });
   },
   list: function(req, res) {
+    if (!req.params.id || req.params.id == "(null)") {
+      res.status(500).json({
+          result: false,
+          message: 'Please logout and come back later!'
+      });
+
+      console.log("\033[31m"+req.decoded.email, "has a (null) organization -- you should email them!\033[91m");
+
+      return;
+    }
+
     org.findById(req.params.id, function(err, result) {
       if (err) {
         res.status(507).json({
