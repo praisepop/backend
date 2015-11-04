@@ -80,10 +80,11 @@ module.exports = {
                 };
 
                 transporter.sendMail(mailOptions, function(error, info){
-                    if (error){
-                        return console.log(error);
+                    if (error) {
+                        console.log(error);
                     }
 
+                    console.log(info);
                     res.json({
                       result: true,
                       message: 'The user was successfully created.'
