@@ -71,8 +71,10 @@ module.exports = {
                 // Make this localhost if testing locally.
                 var link = 'https://api.trypraisepop.com/v1/users/confirm/' + user.id + '/' + createdToken.id;
 
+                var fromUser = process.env['FROM_NAME'] + " <" + process.env['GMAIL_EMAIL'] + ">";
+
                 var mailOptions = {
-                    from: 'PraisePop <no-reply@trypraisepop.com>', // sender address
+                    from: fromUser, // sender address
                     to: request.email, // list of receivers
                     subject: 'Please confirm your PraisePop account!', // Subject line
                     text: 'Hello!  Thanks for signing up for PraisePop!  Please click this link to confirm your account: ' + link + '.', // plaintext body
