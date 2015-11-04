@@ -76,7 +76,7 @@ module.exports = {
                 var mailOptions = {
                     from: fromUser, // sender address
                     to: request.email, // list of receivers
-                    subject: 'Please confirm your PraisePop account!', // Subject line
+                    subject: 'Please confirm your account!', // Subject line
                     text: 'Hello!  Thanks for signing up for PraisePop!  Please click this link to confirm your account: ' + link + '.', // plaintext body
                     html: 'Hello!  Thanks for signing up for PraisePop!  <a href=' + link +'>Please click this link to confirm your account</a>.' // html body
                 };
