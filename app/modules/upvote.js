@@ -30,7 +30,7 @@ module.exports = {
               if (upvoteResult) {
                 if (postResult.to.id != req.decoded._id) {
                   var query = {
-                    channels: ['PPC'+upvote.to.id],
+                    channels: ['PPC'+postResult.to.id],
                     data: {
                       badge: 'Increment',
                       alert: 'Someone popped a pop about you!',
@@ -48,7 +48,7 @@ module.exports = {
                   });
 
                   var query = {
-                    channels: ['PPC'+newUpvote.postResult.from],
+                    channels: ['PPC'+postResult.from],
                     data: {
                       badge: 'Increment',
                       alert: 'Someone upvoted a pop that you wrote!',
