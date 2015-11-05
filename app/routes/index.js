@@ -47,15 +47,18 @@ module.exports = function(router) {
   router.put('/users/update', user.update);
 
   router.get('/orgs/:id/users/random', user.random);
-  router.post('/orgs/:id/posts/new', posts.create);
   router.get('/orgs/:id/posts', posts.list);
 
+  router.post('/orgs/:id/posts/new', posts.create);
+
   router.post('/posts/:id/upvote', posts.upvote);
-  router.delete('/posts/:id', posts.delete);
   router.post('/posts/:id/reaction', posts.react);
-  router.get('/posts/:id/reactions', posts.reactions);
-  router.delete('/posts/:id/reaction', posts.deleteReaction);
   router.post('/posts/:id/flag', posts.flag);
+
+  router.delete('/posts/:id', posts.delete);
+  router.delete('/posts/:id/reaction', posts.deleteReaction);
+
+  router.get('/posts/:id/reactions', posts.reactions);
   router.get('/posts/:id', posts.single);
 
   router.use('*', function(req, res) {
