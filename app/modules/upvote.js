@@ -28,7 +28,7 @@ module.exports = {
               if (err) throw err;
 
               if (upvoteResult) {
-                if (postResult.to.id != req.decoded._id) {
+                if (postResult.to.id && postResult.to.id != req.decoded._id) {
                   var query = {
                     channels: ['PPC'+postResult.to.id],
                     data: {
@@ -46,25 +46,25 @@ module.exports = {
                       console.log('Unable to send notification at',new Date()+'.');
                     }
                   });
-
-                  var query = {
-                    channels: ['PPC'+postResult.from],
-                    data: {
-                      badge: 'Increment',
-                      alert: 'Someone upvoted a pop that you wrote!',
-                      post: upvoteResult.post
-                    }
-                  };
-
-                  Parse.Push.send(query,  {
-                    success: function() {
-                      console.log('Notification sent at',new Date()+'.');
-                    },
-                    error: function(error) {
-                      console.log('Unable to send notification at',new Date()+'.');
-                    }
-                  });
                 }
+
+                var query = {
+                  channels: ['PPC'+postResult.from],
+                  data: {
+                    badge: 'Increment',
+                    alert: 'Someone upvoted a pop that you wrote!',
+                    post: upvoteResult.post
+                  }
+                };
+
+                Parse.Push.send(query,  {
+                  success: function() {
+                    console.log('Notification sent at',new Date()+'.');
+                  },
+                  error: function(error) {
+                    console.log('Unable to send notification at',new Date()+'.');
+                  }
+                });
 
                 res.status(201).json({
                   result: true,
