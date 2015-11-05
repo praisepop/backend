@@ -52,7 +52,7 @@ module.exports = {
                   channels: ['PPC'+postResult.from],
                   data: {
                     badge: 'Increment',
-                    alert: 'Someone upvoted a pop that you wrote!',
+                    alert: 'Someone popped a pop that you wrote!',
                     post: upvoteResult.post
                   }
                 };
