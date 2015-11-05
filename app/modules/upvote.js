@@ -46,6 +46,24 @@ module.exports = {
                       console.log('Unable to send notification at',new Date()+'.');
                     }
                   });
+
+                  var query = {
+                    channels: ['PPC'+newUpvote.upvoted_by],
+                    data: {
+                      badge: 'Increment',
+                      alert: 'Someone upvoted a pop that you wrote!',
+                      post: upvoteResult.post
+                    }
+                  };
+
+                  Parse.Push.send(query,  {
+                    success: function() {
+                      console.log('Notification sent at',new Date()+'.');
+                    },
+                    error: function(error) {
+                      console.log('Unable to send notification at',new Date()+'.');
+                    }
+                  });
                 }
 
                 res.status(201).json({

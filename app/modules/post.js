@@ -66,7 +66,7 @@ module.exports = {
         if (result) {
           if (request.to.id && request.to.id != req.decoded._id) {
             var query = {
-              channels: ['PPC'+user.id],
+              channels: ['PPC'+request.to.id],
               data: {
                 badge: 'Increment',
                 alert: 'Someone wrote a pop about you!',
